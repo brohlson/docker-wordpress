@@ -1,13 +1,6 @@
-#  Starter for Dockerized WP Instance
-#     1) Replace 'wp_db' with unique database name
-#     2) Replace 'wpsite' with unique arbitrary network name
-#     3) Run docker-compose up -d
-#     4) Uncomment PHPMyAdmin service & Run dc-up again
-
 version: "3"
 
 services:
-  # Database
   db:
     image: mysql:5.7
     volumes:
@@ -41,7 +34,12 @@ services:
     ports:
       - "8000:80"
     restart: always
-    volumes: ["./:/var/www/html"]
+    # uploads.ini sets the max file upload rule to 256MB
+    volumes:
+      [
+        "./:/var/www/html",
+        "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini",
+      ]
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: root
